@@ -32,6 +32,7 @@ class ActivityButton(TypedDict):
 	url: str
 
 class Activity(TypedDict, total = False):
+	name: str
 	type: ActivityType
 	status_display_type: ActivityStatusDisplayType
 	details: str

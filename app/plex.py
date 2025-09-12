@@ -242,7 +242,7 @@ class PlexAlertListener(threading.Thread):
 		stateStrings: list[str] = []
 		if config.config["display"]["duration"] and item.duration and mediaType != "track":
 			stateStrings.append(formatSeconds(item.duration / 1000))
-		largeText, thumb, smallText, smallThumb = "", "", "", ""
+		name, largeText, thumb, smallText, smallThumb = "", "", "", "", ""
 		if mediaType == "movie":
 			title = shortTitle = item.title
 			if config.config["display"]["year"] and item.year:
@@ -276,6 +276,7 @@ class PlexAlertListener(threading.Thread):
 			if config.config["display"]["albumImage"]:
 				thumb = item.thumb
 			if config.config["display"]["artist"] or config.config["display"]["statusTextType"]["listening"] == "artist":
+				name = item.originalTitle or item.grandparentTitle
 				stateStrings.append(item.originalTitle or item.grandparentTitle)
 			if config.config["display"]["statusTextType"]["listening"] == "album":
 				stateStrings = [largeText]
@@ -320,6 +321,8 @@ class PlexAlertListener(threading.Thread):
 				activity["assets"]["small_image"] = smallThumbUrl
 		if stateText:
 			activity["state"] = adjustTextLength(stateText, 120, 2)
+		if name:
+			activity ["name"] = adjustTextLength(name, 120, 2)
 		if config.config["display"]["buttons"]:
 			guidsRaw: list[Guid] = []
 			if mediaType in ["movie", "track"]:
